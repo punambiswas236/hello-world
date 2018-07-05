@@ -201,15 +201,15 @@ void printPath(graph G, int s, int d){
       cout << d << "_ _  ";
 }
 void BFS (graph g1, int s, int d){
-   g1. vertexSet[s].colour =GRAY   ;
-    g1. vertexSet[s].distance=0;
-    g1.  vertexSet[s].pred=NIL;
+     g1.vertexSet[s].colour =GRAY   ;
+     g1.vertexSet[s].distance=0;
+     g1.vertexSet[s].pred=NIL;
 
-   queue Q ;//now  queue is empty
-    Q.enqueue(s);
-    int f= 0;
-    while(Q.is_empty() and f==0) {
-        int m =Q.dequeue();
+     queue Q ;//now  queue is empty
+     Q.enqueue(s);
+     int f= 0;
+     while(Q.is_empty() and f==0) {
+     int m =Q.dequeue();
        // cout << m <<" is dequeued " << "\n";
         vtx *cur;
         cur  = g1. vertexSet[m].lp;
@@ -236,13 +236,13 @@ void BFS (graph g1, int s, int d){
 int main()
 {
    graph g;
-    int source, dest;
+   int source, dest;
 
-    cout << "enter the source " <<endl;
-    cin >> source;
-     cout << "enter the destination " <<endl;
-     cin >> dest;
-    BFS(g,source, dest);
+   cout << "enter the source " <<endl;
+   cin >> source;
+   cout << "enter the destination " <<endl;
+   cin >> dest;
+   BFS(g,source, dest);
 
    /* path c(1,2) ;
     cout << "dist is " << c.distance << " , score is " << c.safetyScore;
