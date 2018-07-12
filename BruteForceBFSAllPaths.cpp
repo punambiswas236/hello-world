@@ -61,83 +61,6 @@ class edge  {
             this->safetyScore=e.safetyScore;
         }*/
 };
-class path  {
-    public:
-        //vector<int> pathvertices;
-        vector<int> pathvertices;
-        int distance;
-        int safetyScore;
-
-        path( ) {
-            vector<int> pathvertices;
-            distance= 0;
-            safetyScore = -1;
-            //cout << "path  \n";
-        }
-
-       path(vector<int> vertices , int d, int s){
-      // path(int d, int s){
-            this->pathvertices=vertices;
-            this->distance=d;
-            this->safetyScore=s;
-             cout << "path2  \n";
-       }
-       void addToPath(int c){
-            pathvertices.push_back(c);
-     }
-     void showPath(){
-           for(int k=0 ; k <pathvertices.size();k++ ) {cout << pathvertices[k] << " .." ;}
-           cout << " \n" ;
-     }
-};
-
-class pqueueOfPath {
-    public:
-        vector<path> allPaths;
-         pqueueOfPath() {
-
-         }
-        pqueueOfPath(vector<path> ap) {
-                 allPaths = ap;
-        }
-        void pushToPqueue(path &p) {
-                  allPaths.push_back(p);
-        }
-        path popFromPqueue() {
-                   return allPaths[0];
-        }
-        path getSafestPath() {
-                 int safestScore=100000;
-                 int safestPathInd=-100000;
-                 for (int i=0 ; i<allPaths.size();i++) {
-                         if (allPaths[i].safetyScore < safestScore) {
-                                 safestScore= allPaths[i].safetyScore;
-                                 safestPathInd=i;
-                         }
-                 }
-                 /*if (!allPaths.empty()){
-                       //path p = allPaths.pop_back();
-                       return allPaths.pop_back();
-                  }
-
-                  return allPaths.pop_back();*/
-                  path p= new path (allPaths[safestPathInd].pathvertices, allPaths[ safestPathInd].distance, allPaths[0].safetyScore);
-                  return allPaths[ safestPathInd];
-        }
-                 int getSafestScore() {
-                 int safestScore=100000;
-                 int safestPathInd=-100000;
-                 for (int i=0 ; i<allPaths.size();i++) {
-                         if (allPaths[i].safetyScore < safestScore) {
-                                 safestScore= allPaths[i].safetyScore;
-                                 safestPathInd=i;
-                         }
-                 }
-                 return safestScore;
-        }
-
-};
-
 class graph{
      public:
      vtx  vertexSet[100];
@@ -200,17 +123,113 @@ class graph{
              return -1;
         }
 };
+class path  {
+    public:
+
+        vector<int> pathvertices;
+        int distance;
+        int safetyScore;
+
+        path( ) {
+            vector<int> pathvertices;
+            distance= 0;
+            safetyScore = -1;
+            //cout << "path  \n";
+        }
+
+       path(vector<int> vertices , int d, int s){
+      // path(int d, int s){
+            this->pathvertices=vertices;
+            this->distance=d;
+            this->safetyScore=s;
+             cout << "path2  \n";
+       }
+       void setDistance( graph g ) {
+                    int d=0;
+                    for(int k=0 ; k <pathvertices.size()-1;k++ ) {
+                    //cout << pathvertices[k] << " .....>  " ;
+                        d=  d+ g.getDistance(pathvertices[k], pathvertices[k+1]);
+                    }
+                    this->distance= d;
+       }
+       void setSafetyScore( int d) {
+                    this->safetyScore= d;
+       }
+       void addToPath(int c){
+            pathvertices.push_back(c);
+       }
+      void showPath(){
+           for(int k=0 ; k <pathvertices.size()-1;k++ ) {cout << pathvertices[k] << " .....>  " ;}
+            cout << pathvertices[pathvertices.size()-1] ;
+            cout << " \n" ;
+      }
+};
+
+class pqueueOfPath {
+    public:
+         vector<path> allPaths;
+         pqueueOfPath() {
+
+         }
+        pqueueOfPath(vector<path> ap) {
+                 allPaths = ap;
+        }
+        void pushToPqueue(path &p) {
+                  allPaths.push_back(p);
+        }
+        path popFromPqueue() {
+                   return allPaths[0];
+        }
+        void showAllPaths() {
+                  for (int i=0 ; i<allPaths.size(); i++ ) {
+                              path p = allPaths[i];
+                              p.showPath();
+                   }
+        }
+        /*path getSafestPath() {
+                 int safestScore=100000;
+                 int safestPathInd=-100000;
+                 for (int i=0 ; i<allPaths.size();i++) {
+                         if (allPaths[i].safetyScore < safestScore) {
+                                 safestScore= allPaths[i].safetyScore;
+                                 safestPathInd=i;
+                         }
+                 }
+                 /*if (!allPaths.empty()){
+                       //path p = allPaths.pop_back();
+                       return allPaths.pop_back();
+                  }
+                  return allPaths.pop_back();*/
+                 /* path p(allPaths[safestPathInd].pathvertices, allPaths[ safestPathInd].distance,allPaths[0].safetyScore);
+                  return allPaths[safestPathInd];
+        }*/
+                 int getSafestScore() {
+                 int safestScore=100000;
+                 int safestPathInd=-100000;
+                 for (int i=0 ; i<allPaths.size();i++) {
+                         if (allPaths[i].safetyScore < safestScore) {
+                                 safestScore= allPaths[i].safetyScore;
+                                 safestPathInd=i;
+                         }
+                 }
+                 return safestScore;
+        }
+
+};
+
+
+/*
 void printPath(graph G, int s, int d){
      // if (d==s) {cout <<s << " ** ";}
-       if (G. vertexSet[d].pred==NIL) { cout << " no path from " << s << " to " << d << "exists \n" ;}
-      else {
-            printPath(G, s, G. vertexSet[d].pred );
-            }
+       if (G. vertexSet[d].pred!=NIL) {
+        printPath(G, s, G. vertexSet[d].pred);
+       //cout << " no path from " << s << " to " << d << "exists \n" ;
+       }
+
       cout << d << "_ _  ";
 }
-
-// utility function for printing the found path in graph
-void printpath(vector<int>& path)
+// utility function for printing the found path in graph (No Need)
+/*void printpath(vector<int>& path)
 {
     int size = path.size();
     for (int i = 0; i < size; i++)
@@ -218,8 +237,7 @@ void printpath(vector<int>& path)
     cout << endl;
 }
 
-// utility function to check if current
-// vertex is already present in path
+// utility function to check if current vertex is already present in path (No Need)
 int isNotVisited(int x, vector<int>& path)
 {
     int size = path.size();
@@ -228,15 +246,16 @@ int isNotVisited(int x, vector<int>& path)
             return 0;
     return 1;
 }
+*/
+
 void BFS (graph g1, int s, int d){
-   g1.vertexSet[s].colour =GRAY   ;
+    g1.vertexSet[s].colour =GRAY   ;
     g1.vertexSet[s].distance=0;
     g1.vertexSet[s].pred=NIL;
 
-   // create a queue which stores
-    // the paths
+   // create a queue which stores the paths
     queue<vector<int> > q;
-    pqueueOfPath pq;
+     pqueueOfPath pq;
     // path vector to store the current path
     path p;
     vector<int> path;
@@ -245,48 +264,47 @@ void BFS (graph g1, int s, int d){
     path.push_back(s);
 
     q.push(path);
-    pq.pushToPqueue(p);
+    //pq.pushToPqueue(p);
 
-    int f= 0;
+    int f= 0; // variable for checking if destination is already found
     //----while(Q.is_empty() and f==0) {
-        while (!q.empty() and f==0) {
+        while (!q.empty()) {
               path = q.front();
               p.pathvertices =  path;
               q.pop();
               int m = path[path.size() - 1];
 
-                 // if last vertex is the desired destination  then print the path
-
-               if (m == d){
-                         printpath(path);
+               if (m == d){ // if last vertex is the desired destination  then print the path
+                         //printpath(path);
+                         pq.pushToPqueue(p);
                }
 
-        //-----int m =Q.dequeue();
-       // cout << m <<" is dequeued " << "\n";
-        vtx *cur;
-        cur  = g1. vertexSet[m].lp;
-        // traverse to all the nodes connected to current vertex and push new path to queue
-        for(cur = g1. vertexSet[m].lp; cur!=NULL and f==0 ; cur=cur->lp){
-            if (  g1. vertexSet[cur->indx].colour ==WHITE ) {
-                  // g1. vertexSet[cur->indx].colour= GRAY   ; //---dont keep a visited set
-                   vector<int> newpath(path);
-                   g1. vertexSet[cur->indx].distance= g1. vertexSet[m].distance + g1.getDistance(m,cur->indx);
-                   newpath.push_back(cur->indx);
+                //-----int m =Q.dequeue();
+                // cout << m <<" is dequeued " << "\n";
+                vtx *cur;
+                cur  = g1. vertexSet[m].lp;
+                // traverse to all the nodes connected to current vertex and push new path to queue
+                for(cur = g1. vertexSet[m].lp; cur!=NULL and f==0 ; cur=cur->lp){
+                    if (  g1. vertexSet[cur->indx].colour ==WHITE ) {
+                    // g1. vertexSet[cur->indx].colour= GRAY   ; //---dont keep a visited set
+                    vector<int> newpath(path);
+                    g1.vertexSet[cur->indx].distance= g1. vertexSet[m].distance + g1.getDistance(m,cur->indx);
+                    newpath.push_back(cur->indx);
                     q.push(newpath);
-                  // cout << "*************** /n";
-                  // cout << " curent edge is from " << m << " to " << cur->indx << "\n" ;
-                   //cout <<" distance of "  << cur ->indx << " from " << s  << "   is : " << g1. vertexSet[cur->indx].distance <<endl ;
-                     g1. vertexSet[cur->indx].pred=m;
+                    // cout << "*************** /n";
+                    // cout << " curent edge is from " << m << " to " << cur->indx << "\n" ;
+                    //cout <<" distance of "  << cur ->indx << " from " << s  << "   is : " << g1. vertexSet[cur->indx].distance <<endl ;
+                    g1. vertexSet[cur->indx].pred=m;
                     //------------  Q.enqueue(cur->indx);
-                     // if(cur->indx==d ) {f=1;}
+                    // if(cur->indx==d ) {f=1;}
             }
         }
     g1. vertexSet[m].colour=BLACK  ;
     }
   if(g1. vertexSet[d].distance ==INFINITE) { cout << d << " is not reachable from " << s << "\n";}
-  else { cout <<" distance of "  << d << " from " << s  << "   is : " << g1. vertexSet[d].distance <<endl ;}
-
-   printPath(g1,  s,  d);
+  //else { cout <<" distance of "  << d << " from " << s  << "   is : " << g1. vertexSet[d].distance <<endl ;}
+  pq.showAllPaths();
+   //printPath(g1,  s,  d);
 }
 
 int main()
@@ -294,12 +312,11 @@ int main()
    graph g;
    int source, dest;
 
-
    cout << "enter the source " <<endl;
    cin >> source;
-     cout << "enter the destination " <<endl;
-     cin >> dest;
-    BFS(g,source, dest);
+   cout << "enter the destination " <<endl;
+   cin >> dest;
+   BFS(g,source, dest);
 
    /* path c(1,2) ;
     cout << "dist is " << c.distance << " , score is " << c.safetyScore;
@@ -309,14 +326,4 @@ int main()
     c.addToPath(1);
     c.showPath();*/
 
-
-   /*vector <int> g1;
-
-    for (int i = 1; i <= 5; i++)
-        g1.push_back(i);
-
-    cout << "Size : " << g1.size();
-    cout << "\nCapacity : " << g1.capacity();
-    cout << "\nMax_Size : " << g1.max_size();*/
 }
-
