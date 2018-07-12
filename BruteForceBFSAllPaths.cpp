@@ -63,9 +63,9 @@ class edge  {
 };
 class graph{
      public:
-     vtx  vertexSet[100];
+     vtx vertexSet[100];
      edge edgeSet[100];
-    graph( )  {
+     graph( )  {
       //cout<<"--------ENTER NUMBER OF VERTICES AND EDGES,AND THEN THE EDGES-----------   " <<endl;
      // scanf("%d%d ",&noVtx, &noEdge);
        ifstream myReadFile;
@@ -120,12 +120,11 @@ class graph{
                         return edgeSet[j].distance;
                 }
              }
-             return -1;
+             return -100000;
         }
 };
 class path  {
     public:
-
         vector<int> pathvertices;
         int distance;
         int safetyScore;
@@ -158,9 +157,10 @@ class path  {
        void addToPath(int c){
             pathvertices.push_back(c);
        }
-      void showPath(){
-           for(int k=0 ; k <pathvertices.size()-1;k++ ) {cout << pathvertices[k] << " .....>  " ;}
+      void showPath( graph g){
+           for(int k=0 ; k <pathvertices.size()-1;k++ ) {cout << pathvertices[k] << " ...."   << " (d="  << g.getDistance(pathvertices[k], pathvertices[k+1]) <<   " )....>  "  ;}
             cout << pathvertices[pathvertices.size()-1] ;
+            cout << " distance = "  << this->distance;
             cout << " \n" ;
       }
 };
@@ -180,10 +180,10 @@ class pqueueOfPath {
         path popFromPqueue() {
                    return allPaths[0];
         }
-        void showAllPaths() {
+        void showAllPaths(graph g) {
                   for (int i=0 ; i<allPaths.size(); i++ ) {
                               path p = allPaths[i];
-                              p.showPath();
+                              p.showPath(g);
                    }
         }
         /*path getSafestPath() {
@@ -276,6 +276,7 @@ void BFS (graph g1, int s, int d){
 
                if (m == d){ // if last vertex is the desired destination  then print the path
                          //printpath(path);
+                         p.setDistance(g1);
                          pq.pushToPqueue(p);
                }
 
@@ -288,7 +289,7 @@ void BFS (graph g1, int s, int d){
                     if (  g1. vertexSet[cur->indx].colour ==WHITE ) {
                     // g1. vertexSet[cur->indx].colour= GRAY   ; //---dont keep a visited set
                     vector<int> newpath(path);
-                    g1.vertexSet[cur->indx].distance= g1. vertexSet[m].distance + g1.getDistance(m,cur->indx);
+                   //  g1.vertexSet[cur->indx].distance= g1. vertexSet[m].distance + g1.getDistance(m,cur->indx); // No need to keep distance information in vertex
                     newpath.push_back(cur->indx);
                     q.push(newpath);
                     // cout << "*************** /n";
@@ -303,7 +304,8 @@ void BFS (graph g1, int s, int d){
     }
   if(g1. vertexSet[d].distance ==INFINITE) { cout << d << " is not reachable from " << s << "\n";}
   //else { cout <<" distance of "  << d << " from " << s  << "   is : " << g1. vertexSet[d].distance <<endl ;}
-  pq.showAllPaths();
+  pq.showAllPaths(g1);
+
    //printPath(g1,  s,  d);
 }
 
