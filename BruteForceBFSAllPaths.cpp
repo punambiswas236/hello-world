@@ -122,6 +122,15 @@ class graph{
              }
              return -100000;
         }
+        int getSafetyScore(int v1, int v2) {
+             for (int j=0; j<i; j++){
+                if (edgeSet[j].startVtx == v1 and edgeSet[j].endVtx == v2 ) {
+                        //cout <<"Distance between "  << v1 << " and " << v2 << " is "  << edgeSet[j].distance << " \n";
+                        return edgeSet[j].safetyScore;
+                }
+             }
+             return INF;
+        }
 };
 class path  {
     public:
@@ -151,16 +160,28 @@ class path  {
                     }
                     this->distance= d;
        }
-       void setSafetyScore( int d) {
-                    this->safetyScore= d;
+       void setSafetyScore( graph g) {
+                    int s=10;
+                    for(int k=0 ; k <pathvertices.size()-1;k++ ) {
+                    //cout << pathvertices[k] << " .....>  " ;
+                        if(g.getSafetyScore(pathvertices[k], pathvertices[k+1]) <s) {
+                              cout<< "oss" << "\n";
+                              s =g.getSafetyScore(pathvertices[k], pathvertices[k+1]);
+                        }
+                    }
+                    this->safetyScore= s;
        }
        void addToPath(int c){
             pathvertices.push_back(c);
        }
       void showPath( graph g){
-           for(int k=0 ; k <pathvertices.size()-1;k++ ) {cout << pathvertices[k] << " ...."   << " (d="  << g.getDistance(pathvertices[k], pathvertices[k+1]) <<   " )....>  "  ;}
+           for(int k=0 ; k <pathvertices.size()-1;k++ ) {
+                 cout << pathvertices[k] << " ...."   << " (d="  << g.getDistance(pathvertices[k], pathvertices[k+1]) <<   ","  << " s="  << g.getSafetyScore(pathvertices[k], pathvertices[k+1]) <<   " )....>  "  ; ;
+            }
+            setSafetyScore(g);
             cout << pathvertices[pathvertices.size()-1] ;
             cout << " distance = "  << this->distance;
+            cout << " safety score = "  << this->safetyScore;
             cout << " \n" ;
       }
 };
@@ -225,7 +246,6 @@ void printPath(graph G, int s, int d){
         printPath(G, s, G. vertexSet[d].pred);
        //cout << " no path from " << s << " to " << d << "exists \n" ;
        }
-
       cout << d << "_ _  ";
 }
 // utility function for printing the found path in graph (No Need)
@@ -236,7 +256,6 @@ void printPath(graph G, int s, int d){
         cout << path[i] << " ";
     cout << endl;
 }
-
 // utility function to check if current vertex is already present in path (No Need)
 int isNotVisited(int x, vector<int>& path)
 {
@@ -329,3 +348,4 @@ int main()
     c.showPath();*/
 
 }
+
